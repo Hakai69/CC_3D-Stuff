@@ -1,0 +1,3 @@
+[submodule "CC_Inventory_Handler"]
+	path = CC_Inventory_Handler
+	url = https://github.com/Hakai69/CC_Inventory_Handler.git
