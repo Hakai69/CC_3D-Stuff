@@ -1,12 +1,3 @@
-if not table.unpack then
-	---@diagnostic disable-next-line: deprecated
-	table.unpack = unpack
-end
-
---- Vector module
-local my_module = {}
-local my_module_mt = {}
-
 ---@class Vector
 local Vector = {}
 Vector.__index = Vector
@@ -14,30 +5,22 @@ Vector.__index = Vector
 ---Determines whether an object is a vector
 ---@param x any
 ---@return boolean
-function my_module.isvector(x)
+function Vector.isvector(x)
 	return getmetatable(x) == Vector
 end
 
 ---Creates a new vector
----@overload fun(coordinates: table | Vector): Vector
----@overload fun(...: number): Vector
-function my_module.new(...)
-	local args = {...}
-	if type(args[1]) == 'table' then
-		local v = args[1]
-		args = {}
-		for i=1, #v do
-			assert(type(v[i]) == 'number', 'Elements of a vector must be numbers not ' .. type(v[i]))
-			args[i] = v[i]
-		end
-	else
-		for i=1, #args do
-			assert(type(args[i]) == 'number', 'Elements of a vector must be numbers not ' .. type(args[i]))
-		end
+---@param coordinates table <integer, integer>
+---@return Vector
+function Vector.new(coordinates)
+	local vector = {}
+	for coordinate, value in ipairs(coordinates) do
+		assert(type(value) == 'number', 'Elements of a vector must be numbers not ' .. type(value))
+		vector[coordinate] = value
 	end
 
-	local vector = args
 	setmetatable(vector, Vector)
+
 	return vector
 end
 
@@ -49,9 +32,9 @@ function Vector:__add(v)
 
 	local coords = {}
 	for i=1, #self do
-		table.insert(coords, self[i] + v[i])
+		coords[i] = self[i] + v[i]
 	end
-	return my_module(table.unpack(coords))
+	return Vector.new(coords)
 end
 
 ---Returns the opposite vector
@@ -59,13 +42,9 @@ end
 function Vector:__unm()
 	local coords = {}
 	for i=1, #self do
-		if self ~= 0 then
-			table.insert(coords, - self[i])
-		else --The fact that there's a -0 messes up with indexing tables
-			table.insert(coords, self[i])
-		end
+		coords[i] = self[i] == 0 and 0 or -self[i] --The fact that there's a -0 messes up with indexing tables
 	end
-	return my_module(table.unpack(coords))
+	return Vector.new(coords)
 end
 
 ---Returns the subtraction of two vectors
@@ -98,13 +77,11 @@ function Vector:id()
 	return tostring(self)
 end
 
--- Functions I don't need but I want a full implementation
-
----Determines equality between two vectors
+---Equality between two vectors
 ---@param v Vector
 ---@return boolean
 function Vector:__eq(v)
-	local result = #self == #v and my_module.isvector(self) and my_module.isvector(v)
+	local result = #self == #v and Vector.isvector(v)
 	local i = 1
 	while result and i <= #v do
 		result = self[i] == v[i]
@@ -114,4 +91,17 @@ function Vector:__eq(v)
 	return result
 end
 
-return my_module
+---Vector dot product
+---@param v Vector
+---@return Vector
+function Vector:__mul(v)
+	local coords = {}
+	for i=1, #self do
+		local result = self[i] * v[i]
+		coords[i] = result == -0 and 0 or result  --The fact that there's a -0 messes up with indexing tables
+	end
+	return Vector.new(coords)
+end
+
+
+return Vector
