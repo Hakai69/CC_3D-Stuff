@@ -1,4 +1,4 @@
 .vscode
-testing.lua
+testing*.lua
 term.lua
 *.txt
