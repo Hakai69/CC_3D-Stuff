@@ -3,11 +3,11 @@ if not table.shuffle then
     require('.table_extras')
 end
 ---@module 'tensor'
-local Tensor = require('.tensor')
+local Tensor = require('spatial_tensor')
 ---@module 'vector'
 local Vector = require('.vector')
 ---@module 'cardinal_directions_handler'
-local cdh = require('.cardinal_directions_handler')
+local direction_handler = require('direction_handler')
 
 local my_module = {}
 local my_module_mt = {}
@@ -74,16 +74,10 @@ function spatial_explorer:find_any_new_conexion(position)
 end
 
 ---Finds a path that explores the entire space from a position
----@overload fun(self: spatial_explorer, position: table | Vector): table
----@overload fun(self: spatial_explorer, x: number, y: number, z: number): table
-function spatial_explorer:find_path(...)
-    local args = {...}
-    local position
-    if args[3] then
-        position = Vector.new(args[1], args[2], args[3])
-    else
-        position = Vector.isvector(position) and position or Vector.new(position)
-    end
+---@param position table | Vector
+---@return table
+function spatial_explorer:find_path(position)
+    position = Vector.new(position)
 
     self.path = {}
     self.explored_tensor = Tensor.new(3)
@@ -94,11 +88,11 @@ function spatial_explorer:find_path(...)
 
         local next_position = self:find_any_new_conexion(current_position)
         if not next_position then
-            table.insert(self.path, cdh.opposite_direction(self.path[#self.path]))
+            table.insert(self.path, direction_handler.opposite_direction(self.path[#self.path]))
             self.stack[#self.stack] = nil
         else
             table.insert(self.stack, next_position)
-            table.insert(self.path, cdh.identify(next_position - current_position))
+            table.insert(self.path, direction_handler.identify(next_position - current_position))
         end
     end
 
