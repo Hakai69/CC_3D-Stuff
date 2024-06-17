@@ -1,8 +1,3 @@
-if not table.unpack then
-    ---@diagnostic disable-next-line: deprecated
-    table.unpack = unpack
-end
-
 local my_module = {}
 local my_module_mt = {}
 
