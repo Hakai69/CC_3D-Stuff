@@ -1,8 +1,8 @@
 ---@module 'tensor'
-local Tensor = require('.tensor')
+local Tensor = require 'spatial_tensor'
 
 ---@module 'term'
-local term = require('.term')
+local term = require 'term'
 
 local compiler_args = {...}
 

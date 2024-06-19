@@ -95,13 +95,14 @@ end
 ---@param v Vector
 ---@return Vector
 function Vector:__mul(v)
-	local coords = {}
+	local sum = 0
 	for i=1, #self do
-		local result = self[i] * v[i]
-		coords[i] = result == -0 and 0 or result  --The fact that there's a -0 messes up with indexing tables
+		sum = sum + self[i] * v[i]
 	end
-	return Vector.new(coords)
+	return sum
 end
+
+
 
 
 return Vector

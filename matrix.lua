@@ -1,5 +1,5 @@
 ---@module 'vector'
-local Vector = require('.vector')
+local Vector = require 'vector'
 
 ---@class Matrix
 ---@field rows integer
@@ -158,4 +158,4 @@ function Matrix:__mul(other)
 end
 
 
-return Vector
+return Matrix

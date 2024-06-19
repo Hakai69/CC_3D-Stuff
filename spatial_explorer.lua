@@ -1,16 +1,15 @@
 if not table.shuffle then
     ---@module 'table_extras'
-    require('.table_extras')
+    require 'table_extras'
 end
 ---@module 'tensor'
-local Tensor = require('spatial_tensor')
+local Tensor = require 'spatial_tensor'
 ---@module 'vector'
-local Vector = require('.vector')
+local Vector = require 'vector'
 ---@module 'cardinal_directions_handler'
-local direction_handler = require('direction_handler')
+local direction_handler = require 'direction_handler'
 
 local my_module = {}
-local my_module_mt = {}
 
 ---@class spatial_explorer
 ---@field tensor Tensor
